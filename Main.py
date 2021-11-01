@@ -1,54 +1,133 @@
+import os
+import platform
+
 print("WELCOME TO BATLESHIP GAME!!))")
 print("\n")
-print("XXXXXXXX")
 
-#The length of aplphabe sets demisions of board
+# Defining clear() function using lambdas after requesting OS
+if platform.system() == "Windows":
+    clear = lambda: os.system('cls')
+else:
+    clear = lambda: os.system('clear')
+
+# GENERAL GAME SETTINGS:
+# 1. Board size. Length of aplphabet list below sets size of the board. From "A" to "J" board size is 10 x 10 cells
 alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'] #, 'K', 'L', 'M', 'N'] 
 
-#First numbers are ship sizes, second numbers are number of ships 
-fleet_list = [[4, 1], [3, 2], [2, 3], [1, 4]]  
+# 2. Fleet configuration. First numbers in list below are ship sizes, second numbers are number of ships 
+fleet_config = [[4, 1], [3, 2], [2, 3], [1, 4]]  
 
-ship_clases = {4: "Battleship", 3: "Cruiser", 2: "Destroyer", 1: "Torpedo boat"}
+# 3. Ship class names. In dictionaries below  
+ship_class_names = {4: "Battleship", 3: "Cruiser", 2: "Destroyer", 1: "Torpedo boat"}
+
+# 4. Space factor. Defines the size of spaces between cells
+space_factor = 2
 
 class Board:
 
-    def __init__(self, player_name):
-        self.name = player_name
-        self.matrix = generate_empty_board_matrix()
+    def __init__(self, id):
+        self.id = id
+        self.array = generate_empty_board_array()
+        self.size = len(self.array)
+        self.fleet_array = []
     
     def __repr__(self) -> str:
-        return self.name
+        return self.id
     
     def show(self):
-
-        string = "\n"*2
-        for row in self.matrix:
+        string = "\n" * space_factor
+        for row in self.array:
             for cell in row:
-                string += cell + " "*2
-            string += "\n"*2
+                string += cell + " " * space_factor
+            string += "\n" * space_factor
         print(string)
 
-    def shot(self, coord):
+    def place_ship(self, ship_size, begining_coord_and_direction):
         
+        begining_coord_and_direction = begining_coord_and_direction.strip()
+
+        # if ship_size == 1 and len(begining_coord_and_direction) <= 3:
+        #     x, y = coordinates_from_string(begining_coord_and_direction[:-1])
+        #     direction = "S"
+
+        # elif  len(begining_coord_and_direction) < 3:
+        #     print("ERROR: Wrong ship input notation!!")
+        #     input("Press any key to continue")
+        #     return False
+
+        # else:
+        
+        x, y = coordinates_from_string(begining_coord_and_direction[:-1])
+        direction = begining_coord_and_direction[-1].upper()
+
+        if direction == "S":
+            x_d = 0
+            y_d = 1
+        elif direction == "N":
+            x_d = 0
+            y_d = -1
+        elif direction == "W":
+            x_d = -1
+            y_d = 0
+        elif direction == "E":
+            x_d = 1
+            y_d = 0
+        else:
+            print("ERROR: Wrong ship direction!!")
+            input("Press any key to continue")
+            return False
+
+        ship_array = []
+
+        for i in range(ship_size):
+
+            if x <= self.size-1 and y <= self.size-1 and x > 0 and y > 0:
+                if self.array[y][x] == "H":
+                    print("ERROR: Intersection with existing ship!!")
+                    input("Press any key to continue")
+                    return False
+                else:
+                    ship_array.append([x,y])
+            else:
+                print("ERROR: Coordinates go beyond the board limits!!")
+                input("Press any key to continue")
+                return False
+            
+            x += x_d
+            y += y_d
+
+        for i in range(ship_size):
+            self.array[ship_array[i][1]][ship_array[i][0]] = "H"
+
+        self.fleet_array.append(ship_array)
+        return True
+
+    def place_fleet(self):
+        for ship in fleet_config:
+            
+            for n in range(ship[1]):
+                
+                while not self.place_ship(ship[0], str(input("Input begining coordinates and direction of the ship: "))):
+                    pass
+                clear()
+                self.show()
+             
+        print("All ships are on positions.")
+        print(self.fleet_array)
+        return (self.fleet_array)
+
+    def shot(self, coord):
         x, y = coordinates_from_string(coord)
-
-        self.matrix[y][x] = 'X'
-
-
-
-    def place_ship(self, begining_coord, size, direction):
-        x, y = coordinates_from_string(begining_coord)
-
-        for i in range(size)[1:]:
-            print(i)
+        self.array[y][x] = 'X'
 
 
 
-def generate_empty_board_matrix():
+
+def generate_empty_board_array():
     
-    matrix = ["  "]
-    matrix.extend(alphabet)
-    matrix = [matrix] 
+    array = ["  "]
+    array.extend(alphabet)
+    array = [array] 
     
     for i in range(len(alphabet)):
         
@@ -59,9 +138,9 @@ def generate_empty_board_matrix():
 
         for i in range(len(alphabet)):
             row += "~"   
-        matrix.append(row)
+        array.append(row)
     
-    return matrix
+    return array
 
 def coordinates_from_string(string):
         string = string.strip().upper()
@@ -73,15 +152,26 @@ def coordinates_from_string(string):
 
 board_1 = Board("Anton")
 
-board_1.shot(" d10   ")
+#board_1.shot(" d10   ")
 
-board_1.place_ship("A1",4,"S")
-
+#print(board_1.place_ship(4,"A1S"))
 
 board_1.show()
 
-#board_2 = Board(input("Please input Second Player name: "))
+board_1.place_fleet()
 
+# for i in range(10):
+
+#     board_1.place_ship(int(input("Input ship demision: ")), str(input("Input begining coord and direction: ")))
+#     clear()
+#     board_1.show()
+
+
+#print(board_1.array)
+
+
+
+#board_2 = Board(input("Please input Second Player name: "))
 
 
 input('Press any key to exit')
