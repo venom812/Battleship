@@ -1,5 +1,6 @@
 import os
 import platform
+import random
 
 print("WELCOME TO BATLESHIP GAME!!))")
 print("\n")
@@ -42,7 +43,7 @@ class Board:
             string += "\n" * space_factor
         print(string)
 
-    def place_ship(self, ship_size, begining_coord_and_direction):
+    def place_ship(self, ship_size, begining_coord_and_direction, manual_input = True):
         
         begining_coord_and_direction = begining_coord_and_direction.strip()
 
@@ -73,8 +74,9 @@ class Board:
             x_d = 1
             y_d = 0
         else:
-            print("ERROR: Wrong ship direction!!")
-            input("Press any key to continue")
+            if manual_input:
+                print("ERROR: Wrong ship direction!!")
+                input("Press any key to continue")
             return False
 
         ship_array = []
@@ -83,14 +85,16 @@ class Board:
 
             if x <= self.size-1 and y <= self.size-1 and x > 0 and y > 0:
                 if self.array[y][x] == "H":
-                    print("ERROR: Intersection with existing ship!!")
-                    input("Press any key to continue")
+                    if manual_input:
+                        print("ERROR: Intersection with existing ship!!")
+                        input("Press any key to continue")
                     return False
                 else:
                     ship_array.append([x,y])
             else:
-                print("ERROR: Coordinates go beyond the board limits!!")
-                input("Press any key to continue")
+                if manual_input:
+                    print("ERROR: Coordinates go beyond the board limits!!")
+                    input("Press any key to continue")
                 return False
             
             x += x_d
@@ -115,6 +119,21 @@ class Board:
         print("All ships are on positions.")
         print(self.fleet_array)
         return (self.fleet_array)
+
+    def place_fleet_random(self):
+        for ship in fleet_config:
+            
+            for n in range(ship[1]):
+                
+                while not self.place_ship(ship[0], random.choice(alphabet) + str(random.randint(1, 10)) + random.choice(['N', 'E', 'S', 'W']), False):
+                    pass
+        clear()
+        self.show()
+             
+        print("All ships are on positions.")
+        print(self.fleet_array)
+        return (self.fleet_array)
+
 
     def shot(self, coord):
         x, y = coordinates_from_string(coord)
@@ -158,7 +177,7 @@ board_1 = Board("Anton")
 
 board_1.show()
 
-board_1.place_fleet()
+board_1.place_fleet_random()
 
 # for i in range(10):
 
