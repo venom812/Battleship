@@ -1,5 +1,13 @@
 import random
 import re
+import os
+import platform
+
+# Defining clear() function using lambdas after requesting OS
+if platform.system() == "Windows":
+    clear = lambda: os.system('cls')
+else:
+    clear = lambda: os.system('clear')
 
 # GENERAL GAME SETTINGS:
 # 1. Board size. Length of aplphabet list below sets size of the board. From "A" to "J" board size is 10 x 10 cells
@@ -23,11 +31,12 @@ class Board:
         self.fleet_array = []
     
     def __repr__(self) -> str:
-        return self.id
+        return self.player_name
     
     def show(self):
-        string = "\n" * space_factor
+        string = "\n" * space_factor + "     PLAYER: " + self.player_name + "\n" * space_factor
         for row in self.array:
+            string += " " * space_factor
             for cell in row:
                 string += cell + " " * space_factor
             string += "\n" * space_factor
@@ -36,7 +45,11 @@ class Board:
     def place_ship(self, ship_size, begining_coord_and_direction, manual_input = True):
         
         x, y = coordinates_from_string(begining_coord_and_direction)
-        direction = ship_direction_from_string(begining_coord_and_direction)
+
+        if ship_size > 1:
+            direction = ship_direction_from_string(begining_coord_and_direction)
+        else:
+            direction = "N"
 
         if direction == "S":
             x_d = 0
@@ -52,8 +65,8 @@ class Board:
             y_d = 0
         else:
             if manual_input:
-                print("ERROR: Wrong ship direction!!")
-                input("Press any key to continue")
+                print(" ERROR: Wrong ship direction!!")
+                input(" Press any key to continue")
             return False
 
         ship_array = []
@@ -63,15 +76,15 @@ class Board:
             if x <= self.size-1 and y <= self.size-1 and x > 0 and y > 0:
                 if self.array[y][x] == "H":
                     if manual_input:
-                        print("ERROR: Intersection with existing ship!!")
-                        input("Press any key to continue")
+                        print(" ERROR: Intersection with existing ship!!")
+                        input(" Press any key to continue")
                     return False
                 else:
                     ship_array.append([x,y])
             else:
                 if manual_input:
-                    print("ERROR: Coordinates go beyond the board limits!!")
-                    input("Press any key to continue")
+                    print(" ERROR: Coordinates go beyond the board limits!!")
+                    input(" Press any key to continue")
                 return False
             
             x += x_d
@@ -84,7 +97,7 @@ class Board:
         return True
 
     def place_fleet(self):
-        message = "OK. Allow the first player " + self.player_name + " to secretly place his fleet. Try not to peek)"
+        message = " Allow the first player " + self.player_name + " to secretly place his fleet. Try not to peek)"
         print("\n")
         print(message)
         self.show()
@@ -92,14 +105,16 @@ class Board:
             
             for n in range(ship[1]):
                 
-                while not self.place_ship(ship[0], str(input("Input begining coordinates and heading of the ship: "))):
+                while not self.place_ship(ship[0], str(input(" Input begining coordinates and heading of the ship: "))):
                     pass
                 clear()
                 print(message)
                 self.show()
              
-        print("All ships are on positions.")
-        print(self.fleet_array)
+        print(" All ships of " + self.player_name + " are on positions.")
+        input(' Press ENTER to continue')
+        #print(self.fleet_array)
+        self.array = generate_empty_board_array()
         return (self.fleet_array)
 
     def place_fleet_random(self):
@@ -112,16 +127,14 @@ class Board:
         clear()
         self.show()
              
-        print("All ships are on positions.")
-        print(self.fleet_array)
+        print(" All ships of " + self.player_name + " are on positions.")
+        input(' Press ENTER to continue')
+        self.array = generate_empty_board_array()
         return (self.fleet_array)
-
 
     def shot(self, coord):
         x, y = coordinates_from_string(coord)
         self.array[y][x] = 'X'
-
-
 
 
 def generate_empty_board_array():
@@ -156,7 +169,23 @@ def coordinates_from_string(string):
 def ship_direction_from_string(string):
     string = string.strip().upper()
     strings = re.findall("[A-Z]+",string) # one or more uppercase  letters
-    if len(strings) == 1:
-        return 'N'
-    elif len(strings) == 2:
-        return strings[1]
+    return strings[1]
+
+def show_pair_of_boards(brd1, brd2):
+
+    string = ""
+    for row_num in range(len(brd1.array)):
+        string += " " * space_factor
+        for cell in brd1.array[row_num]:
+            string += cell + " " * space_factor
+        string += " " * space_factor
+        for cell in brd2.array[row_num]:
+            string += cell + " " * space_factor
+        string += "\n" * space_factor 
+
+    h1 = "PLAYER 1: " + brd1.player_name
+    h2 = "PLAYER 2: " + brd2.player_name
+    head_double = " " * (string.find('A')-2) + h1 + " " * (string.find('A',string.index('A') + 1) - string.find('A')-len(h2)) + h2 + "\n"
+
+    print(head_double)
+    print(string)
