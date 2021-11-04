@@ -3,19 +3,20 @@ import time
 import random
 
 # Welcome section
-print("\n")
-print(" WELCOME TO BATLESHIP TERMINAL GAME!!")
+print("\n WELCOME TO BATLESHIP TERMINAL GAME!!")
 time.sleep(3)
 bd.clear()
 
 # Input players names
-print("\n")
-player_1_name = input(" Please input name of the PLAYER 1: ")
-print("\n")
-player_2_name = input(" Please input name of the PLAYER 2: ")
-#print("\n")
+player_1_name = input("\n Please input name of the PLAYER 1: ")
+player_2_name = input("\n Please input name of the PLAYER 2: ") #If You want to play with computer input 0
 board_1 = bd.Board(player_1_name, "PLAYER 1")
-board_2 = bd.Board(player_2_name, "PLAYER 2")
+
+if player_2_name == '0': #If Player 2 is COMPUTER
+    board_2 = bd.Board("HAL 9000", "COMPUTER")
+    print("\n You'e going to play against computer))")
+else:
+    board_2 = bd.Board(player_2_name, "PLAYER 2")
 time.sleep(3)
 
 def play_game():
@@ -27,26 +28,22 @@ def play_game():
 
     # Place fleets by users
     board_1.place_fleet()
-    #board_1.place_fleet_random()
     bd.clear()
     time.sleep(1)
-    print("\n OK. Let's do the same for the second player")
-    board_2.place_fleet()
-    #board_2.place_fleet_random()
-    bd.clear()
-    # print(board_1.player_name)
-    #print(board_1.fleet_array)
-    # print(board_2.player_name)
-    #print(board_2.fleet_array)
-    time.sleep(2)
 
-    print("\n")
-    print(" OK. WE ARE READY FOR BATLLESHIP!!")
-    print("\n")
+    if player_2_name == '0': #If Player 2 is COMPUTER:
+        board_2.place_fleet_random()
+    else:
+        print("\n OK. Let's do the same for the second player")
+        board_2.place_fleet()
+        bd.clear()
+        time.sleep(2)
+
+    print("\n OK. WE ARE READY FOR BATLLESHIP!!")
     time.sleep(4)
     bd.clear()
     
-    bd.show_pair_of_boards(board_1, board_2)
+    #show_pair_of_boards(board_1, board_2)
     
     #Determining whose shot is the first
     if board_1.won_prev_game:
@@ -58,30 +55,36 @@ def play_game():
         shot_player_id = board_2.player_id
 
     else:
-        print("\n This is initial battle!.\n\n Whose move is the first will be determined by chance.\n\n")
+        print("\n This is initial battle.\n\n So, whose move is the first will be determined by chance.")
         
         if random.getrandbits(1) == 1:
             shot_player_id = board_1.player_id
         else:
             shot_player_id = board_2.player_id
 
-        print(" " + shot_player_id + "! Today is your day. Shot first.\n\n")
+        print("\n " + shot_player_id + "! Today is your day. Shot first.")
     time.sleep(7)
     bd.clear()
-    bd.show_pair_of_boards(board_1, board_2)
+    #show_pair_of_boards(board_1, board_2)
     
     while board_1.fleet_array and board_2.fleet_array:
+        
         if shot_player_id == board_1.player_id:
+            board_2.show()
             if not board_2.shot_at(shot_player_id):
                 shot_player_id = board_2.player_id
         else:
+            board_1.show()
             if not board_1.shot_at(shot_player_id):
                 shot_player_id = board_1.player_id
+        #bd.clear()
+        #show_pair_of_boards(board_1, board_2)
+        time.sleep(5)
         bd.clear()
-        bd.show_pair_of_boards(board_1, board_2)
 
+    bd.show_pair_of_boards(board_1, board_2)
     print("\n  " + shot_player_id + " WON THIS BATTLE!!")
-    time.sleep(7)
+    time.sleep(12)
     
     if board_1.player_id == shot_player_id:
         board_1.wins_number += 1
@@ -91,22 +94,11 @@ def play_game():
         board_2.won_prev_game = True
 
     bd.clear()
-    print("\n\n  " + board_1.player_id + " won in games: " + str(board_1.wins_number))
+    print("\n  " + board_1.player_id + " won in games: " + str(board_1.wins_number))
     print("\n  " + board_2.player_id + " won in games: " + str(board_2.wins_number))                          
     input('\n Press ENTER begin new game')
     return True
 
 while play_game():
     pass
-
-    
-
-
-
-
-
-
-
-
-
 
