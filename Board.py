@@ -33,7 +33,7 @@ class Board:
         self.won_prev_game = False
         self.wins_number = 0
 
-    def reset_for_new_game(self): #Resets properties of class before next Game
+    def reset_for_new_game(self): #Resets properties of class instance before next Game
         self.array = generate_empty_board_array()
         self.fleet_array = []
         self.shot_list = []
@@ -216,12 +216,14 @@ class Board:
         return False
             
 
-def generate_empty_board_array(): #Creates empty board field 2D array
+def generate_empty_board_array(): #Creates empty board field (2D array)
     
+    #Generation of the headings row
     array = ["  "]
     array.extend(alphabet)
     array = [array] 
     
+    #Generation all other rows
     for i in range(len(alphabet)):
         
         if (i+1) < 10: 
