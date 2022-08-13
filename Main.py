@@ -3,7 +3,7 @@ import time
 import random
 
 # Welcome section
-print("\n WELCOME TO BATLESHIP TERMINAL GAME!!!:)")
+print("\n WELCOME TO BATLESHIP TERMINAL GAME!!!:):)")
 time.sleep(3)
 bd.clear()
 
