@@ -3,13 +3,13 @@ import time
 import random
 
 # Welcome section
-print("\n WELCOME TO BATLESHIP TERMINAL GAME!!!:):)")
+print("\n WELCOME TO BATLESHIP TERMINAL GAME!!!")
 time.sleep(3)
 bd.clear()
 
 # Input players names
 player_1_name = input("\n Please input name of the PLAYER 1: ")
-player_2_name = input("\n Please input name of the PLAYER 2: ") #If You want to play with computer input 0
+player_2_name = input("\n Please input name of the PLAYER 2 (If You want to play with computer input \"0\"): ") #If You want to play with computer input 0
 board_1 = bd.Board(player_1_name, "PLAYER 1")
 
 if player_2_name == '0': #If Player 2 is COMPUTER
@@ -19,7 +19,7 @@ else:
     board_2 = bd.Board(player_2_name, "PLAYER 2")
 time.sleep(3)
 
-def play_game():
+def play_game(): # Start the game
 
     bd.clear()
 

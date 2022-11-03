@@ -3,7 +3,6 @@ import re
 import os
 import platform
 import time 
-# from Main import board_1, board_2
 
 # Defining clear() function using lambdas after requesting OS
 if platform.system() == "Windows":
@@ -12,14 +11,14 @@ else:
     clear = lambda: os.system('clear')
         
 # GENERAL GAME SETTINGS:
-# -Board size. Length of aplphabet list below sets size of the board. From "A" to "J" board size is 10 x 10 cells
+# Board size. Length of aplphabet list below sets size of the board. From "A" to "J" board size is 10 x 10 cells
 alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']#, 'K', 'L', 'M', 'N'] 
-# -Fleet configuration. First numbers in list below are ship sizes, second numbers are number of ships 
+# Fleet configuration. First numbers in list below are ship sizes, second numbers are number of ships 
 fleet_config = [[4, 1], [3, 2], [2, 3], [1, 4]]
 #fleet_config = [[4, 2]] #test config used in process of debugging
-# -Ship class names. In dictionaries below  
+# Ship class names. In dictionaries below  
 ship_class_names = {4: "Battleship", 3: "Cruiser", 2: "Destroyer", 1: "Torpedo boat"}
-# -Space factor. Defines the size of spaces between cells
+# Space factor. Defines the size of spaces between cells
 space_factor = 2
 
 #This Class represnts player board
@@ -108,7 +107,7 @@ class Board:
             
             for n in range(ship[1]):
                 while True:
-                    try:                                    # Format "A8S", "A" - X coord by alphabet axis, "8" - Y coord by digit axis, "S" - ship diretion
+                    try:    # Format "A8S", "A" - X coord by alphabet axis, "8" - Y coord by digit axis, "S" - ship diretion
                         self.place_ship(ship[0], str(input("\n " + self.player_id + \
                         " Input begining coordinates and heading of the " + ship_class_names.get(ship[0]) + "(" + str(ship[0]) + "): ")))
                     except:
