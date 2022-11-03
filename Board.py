@@ -3,7 +3,7 @@ import re
 import os
 import platform
 import time 
-
+# Test branch
 # Defining clear() function using lambdas after requesting OS
 if platform.system() == "Windows":
     clear = lambda: os.system('cls')
